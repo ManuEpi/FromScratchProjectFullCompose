@@ -11,6 +11,9 @@ import com.manuepi.fromscratchprojectv2.ui.theme.FromScratchProjectV2Theme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //installSplashScreen()
+
         setContent {
             FromScratchProjectV2Theme {
                 MainNavigation()

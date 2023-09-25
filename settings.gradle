@@ -14,5 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "FromScratchProjectV2"
 include ':app'
-include ':features'
 include ':datas'
+include ':feature-splashscreen'
+include ':feature-home'

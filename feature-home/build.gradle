@@ -8,58 +8,34 @@ buildscript {
 }
 
 plugins {
-    id 'kotlin-android'
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.dagger.hilt.android'
-    id 'kotlin-kapt'
+    id("com.android.library")
+    id("kotlin-android")
+    id("org.jetbrains.kotlin.kapt")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
-    namespace 'com.manuepi.fromscratchprojectv2'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.manuepi.fromscratchprojectv2"
         minSdk 27
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
-        compileSdkPreview = "UpsideDownCake"
-        multiDexEnabled true
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    packagingOptions {
-        resources.excludes.add("META-INF/*")
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     buildFeatures {
-        compose true
+        compose = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.2.0'
-    }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
     }
 }
 
@@ -105,17 +81,8 @@ dependencies {
 
     // To debug dependency injection issue
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
-
-    // SplashScreen
-    implementation 'androidx.core:core-splashscreen:1.1.0-alpha02'
-
-    // MultiDex
-    implementation "androidx.multidex:multidex:2.0.1"
-
-    implementation project(":feature-splashscreen")
-    implementation project(":feature-home")
-
 }
+
 
 kapt {
     correctErrorTypes true

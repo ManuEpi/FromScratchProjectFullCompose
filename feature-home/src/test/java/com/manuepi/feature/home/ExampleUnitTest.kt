@@ -1,4 +1,4 @@
-package com.manuepi.features
+package com.manuepi.feature.home
 
 import org.junit.Test
 
