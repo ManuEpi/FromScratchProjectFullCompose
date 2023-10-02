@@ -1,4 +1,4 @@
-package com.manuepi.feature.splashscreen
+package com.manuepi.fromscratchprojectv2.feature.splashscreen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
