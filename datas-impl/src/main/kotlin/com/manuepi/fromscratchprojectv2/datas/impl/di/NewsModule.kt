@@ -1,4 +1,4 @@
-package com.manuepi.fromscratchprojectv2.datas.di
+package com.manuepi.fromscratchprojectv2.datas.impl.di
 
 import com.manuepi.fromscratchprojectv2.datas.NewsLocalCache
 import com.manuepi.fromscratchprojectv2.datas.NewsRepository
