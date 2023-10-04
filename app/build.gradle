@@ -106,15 +106,16 @@ dependencies {
     // To debug dependency injection issue
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
-    // SplashScreen
-    implementation 'androidx.core:core-splashscreen:1.1.0-alpha02'
+    // Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
 
     // MultiDex
     implementation "androidx.multidex:multidex:2.0.1"
 
     implementation project(":feature-splashscreen")
     implementation project(":feature-home")
-
+    implementation project(":common")
+    implementation project(":navigation")
 }
 
 kapt {
