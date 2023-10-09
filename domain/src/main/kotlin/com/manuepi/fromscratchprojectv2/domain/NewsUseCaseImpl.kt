@@ -1,11 +1,11 @@
 package com.manuepi.fromscratchprojectv2.domain
 
-import com.manuepi.fromscratchprojectv2.datas.NewsLocalCache
+import com.manuepi.fromscratchprojectv2.datas.cache.NewsLocalCache
 import com.manuepi.fromscratchprojectv2.domain.mapper.NewsUseCaseMapper
 import com.manuepi.fromscratchprojectv2.domain.model.NewsItemUseCaseModel
 import com.manuepi.fromscratchprojectv2.domain.model.NewsUseCaseStateModel
-import com.manuepi.fromscratchprojectv2.datas.NewsRepository
-import com.manuepi.fromscratchprojectv2.datas.impl.repository.mappers.NewsMapperRepositoryModel
+import com.manuepi.fromscratchprojectv2.datas.repository.NewsRepository
+import com.manuepi.fromscratchprojectv2.datas.repository.mappers.NewsMapperRepositoryModel
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

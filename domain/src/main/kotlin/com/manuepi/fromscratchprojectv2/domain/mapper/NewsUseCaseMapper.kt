@@ -1,9 +1,9 @@
 package com.manuepi.fromscratchprojectv2.domain.mapper
 
-import com.manuepi.fromscratchprojectv2.datas.models.NewsItemLocalCacheModel
-import com.manuepi.fromscratchprojectv2.datas.models.NewsItemSourceLocalCacheModel
-import com.manuepi.fromscratchprojectv2.datas.models.NewsLocalCacheModel
-import com.manuepi.fromscratchprojectv2.datas.models.NewsLocalStateModel
+import com.manuepi.fromscratchprojectv2.datas.cache.models.NewsItemLocalCacheModel
+import com.manuepi.fromscratchprojectv2.datas.cache.models.NewsItemSourceLocalCacheModel
+import com.manuepi.fromscratchprojectv2.datas.cache.models.NewsLocalCacheModel
+import com.manuepi.fromscratchprojectv2.datas.cache.models.NewsLocalStateModel
 import com.manuepi.fromscratchprojectv2.domain.model.NewsItemSourceUseCaseModel
 import com.manuepi.fromscratchprojectv2.domain.model.NewsItemUseCaseModel
 import com.manuepi.fromscratchprojectv2.domain.model.NewsUseCaseModel
