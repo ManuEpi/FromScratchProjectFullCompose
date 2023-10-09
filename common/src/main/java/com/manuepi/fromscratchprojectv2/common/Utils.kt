@@ -3,6 +3,10 @@ package com.manuepi.fromscratchprojectv2.common
 import retrofit2.Response
 import timber.log.Timber
 
+sealed class Screens(val route: String) {
+    object SplashScreen : Screens("splash_screen")
+    object Home : Screens("home_screen")
+}
 
 sealed class NetworkResponse<T : Any> {
     class Success<T : Any>(val data: T) : NetworkResponse<T>()

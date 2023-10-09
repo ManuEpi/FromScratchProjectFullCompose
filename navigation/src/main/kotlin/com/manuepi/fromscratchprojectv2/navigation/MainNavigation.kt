@@ -1,29 +1,28 @@
 package com.manuepi.fromscratchprojectv2.navigation
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.manuepi.fromscratchprojectv2.common.Screens
 import com.manuepi.fromscratchprojectv2.feature.home.HomeScreen
+import com.manuepi.fromscratchprojectv2.feature.splashscreen.SplashScreen
 
-sealed class Screens(val route: String) {
-    object SplashScreen : Screens("splash_screen")
-    object Home : Screens("home_screen")
-}
 
 @Composable
 fun MainNavigation(
     modifier: Modifier = Modifier,
-    navigator: Navigator,
-    startDestination: String = Screens.SplashScreen.route
+    startDestination: String = Screens.Home.route
 ) {
+    val context = LocalContext.current
     val navController = rememberNavController()
-    navigator.setController(navController)
 
-    NavHost(navController = navController, startDestination = Screens.Home.route)
+    NavHost(navController = navController, startDestination = startDestination)
     {
-        /*composable(Screens.SplashScreen.route) {
+        composable(Screens.SplashScreen.route) {
             SplashScreen(
                 isLoaded = true, // TODO remplacer
                 onSplashEndedValid = {
@@ -36,7 +35,7 @@ fun MainNavigation(
                         Toast.LENGTH_SHORT
                     ).show()
                 })
-        }*/
-        composable(Screens.Home.route) { HomeScreen() }
+        }
+        composable(Screens.Home.route) { HomeScreen(navController = navController) }
     }
 }

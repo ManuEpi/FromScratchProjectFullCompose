@@ -2,13 +2,12 @@ package com.manuepi.fromscratchprojectv2.feature.home
 
 import android.util.Log
 import androidx.lifecycle.*
+import androidx.navigation.NavHostController
 import com.manuepi.fromscratchprojectv2.domain.NewsUseCase
 import com.manuepi.fromscratchprojectv2.domain.model.NewsUseCaseStateModel
 import com.manuepi.fromscratchprojectv2.feature.home.mapper.NewsMapperUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiStateModel
-//import com.manuepi.fromscratchprojectv2.navigation.Navigator
-//import com.manuepi.fromscratchprojectv2.navigation.Screens
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val newsUseCase: NewsUseCase, private val newsMapperUiModel: NewsMapperUiModel,
-    //private val navigator: Navigator,
+    private val newsUseCase: NewsUseCase, private val newsMapperUiModel: NewsMapperUiModel
 ) : ViewModel() {
     private val _viewState = MutableStateFlow<NewsUiStateModel.State>(NewsUiStateModel.State.Init)
     val viewState = _viewState.asStateFlow()
@@ -56,7 +54,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun onItemClicked(modelUi: NewsItemUiModel) {
+    fun onItemClicked(modelUi: NewsItemUiModel, navController: NavHostController) {
+        navController.navigate("sakyt")
         Log.e("title", modelUi.title.toString())
         //navigator.navigate(destination = Screens.Home)
     }
