@@ -1,12 +1,9 @@
 package com.manuepi.fromscratchprojectv2.feature.home
 
-import android.util.Log
 import androidx.lifecycle.*
-import androidx.navigation.NavHostController
 import com.manuepi.fromscratchprojectv2.domain.NewsUseCase
 import com.manuepi.fromscratchprojectv2.domain.model.NewsUseCaseStateModel
 import com.manuepi.fromscratchprojectv2.feature.home.mapper.NewsMapperUiModel
-import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiStateModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -52,11 +49,5 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             newsUseCase.getNews()
         }
-    }
-
-    fun onItemClicked(modelUi: NewsItemUiModel, navController: NavHostController) {
-        navController.navigate("sakyt")
-        Log.e("title", modelUi.title.toString())
-        //navigator.navigate(destination = Screens.Home)
     }
 }

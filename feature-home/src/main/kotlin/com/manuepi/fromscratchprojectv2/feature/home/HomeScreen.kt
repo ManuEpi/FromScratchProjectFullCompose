@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.manuepi.fromscratchprojectv2.common.Screens
+import com.manuepi.fromscratchprojectv2.common.SharedViewModel
 import com.manuepi.fromscratchprojectv2.common.formatText
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiModel
@@ -34,7 +34,7 @@ import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiStateModel
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navController: NavHostController
+    sharedViewModel: SharedViewModel
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
     val model: NewsUiModel? = (state.value as? NewsUiStateModel.State.Success)?.model
@@ -59,7 +59,7 @@ fun HomeScreen(
         LazyColumn {
             items(model?.articles.orEmpty()) { modelUi ->
                 HomeItems(modelUi = modelUi, onItemClicked = {
-                    navController.navigate(Screens.Home.route)
+                    sharedViewModel.updateScreenState(screen = Screens.SplashScreen)
                 })
             }
         }

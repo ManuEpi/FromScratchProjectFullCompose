@@ -4,10 +4,13 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.manuepi.fromscratchprojectv2.common.Screens
+import com.manuepi.fromscratchprojectv2.common.SharedViewModel
+import com.manuepi.fromscratchprojectv2.common.SharedViewModelFactory
 import com.manuepi.fromscratchprojectv2.feature.home.HomeScreen
 import com.manuepi.fromscratchprojectv2.feature.splashscreen.SplashScreen
 
@@ -19,8 +22,13 @@ fun MainNavigation(
 ) {
     val context = LocalContext.current
     val navController = rememberNavController()
+    val sharedViewModel = viewModel<SharedViewModel>(
+        factory = SharedViewModelFactory(navController = navController)
+    )
 
-    NavHost(navController = navController, startDestination = startDestination)
+    NavHost(
+        navController = navController, startDestination = startDestination
+    )
     {
         composable(Screens.SplashScreen.route) {
             SplashScreen(
@@ -36,6 +44,6 @@ fun MainNavigation(
                     ).show()
                 })
         }
-        composable(Screens.Home.route) { HomeScreen(navController = navController) }
+        composable(Screens.Home.route) { HomeScreen(sharedViewModel = sharedViewModel) }
     }
 }
