@@ -28,7 +28,7 @@ import com.manuepi.fromscratchprojectv2.common.SharedViewModel
 import com.manuepi.fromscratchprojectv2.common.formatText
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiModel
-import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiStateModel
+import com.manuepi.fromscratchprojectv2.feature.home.model.HomeUiStateModel
 
 @SuppressLint("PrivateResource")
 @Composable
@@ -37,7 +37,7 @@ fun HomeScreen(
     sharedViewModel: SharedViewModel
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
-    val model: NewsUiModel? = (state.value as? NewsUiStateModel.State.Success)?.model
+    val model: NewsUiModel? = (state.value as? HomeUiStateModel.State.Success)?.model
 
     // API call
     LaunchedEffect(key1 = Unit) {
@@ -59,7 +59,8 @@ fun HomeScreen(
         LazyColumn {
             items(model?.articles.orEmpty()) { modelUi ->
                 HomeItems(modelUi = modelUi, onItemClicked = {
-                    sharedViewModel.updateScreenState(screen = Screens.SplashScreen)
+                    viewModel.updateSelectedNews(modelUi = modelUi)
+                    sharedViewModel.updateScreenState(screen = Screens.NewsDetail)
                 })
             }
         }

@@ -3,8 +3,9 @@ package com.manuepi.fromscratchprojectv2.feature.home
 import androidx.lifecycle.*
 import com.manuepi.fromscratchprojectv2.domain.NewsUseCase
 import com.manuepi.fromscratchprojectv2.domain.model.NewsUseCaseStateModel
-import com.manuepi.fromscratchprojectv2.feature.home.mapper.NewsMapperUiModel
-import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiStateModel
+import com.manuepi.fromscratchprojectv2.feature.home.mapper.HomeMapperUi
+import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
+import com.manuepi.fromscratchprojectv2.feature.home.model.HomeUiStateModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -13,9 +14,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val newsUseCase: NewsUseCase, private val newsMapperUiModel: NewsMapperUiModel
+    private val newsUseCase: NewsUseCase, private val homeMapperUi: HomeMapperUi
 ) : ViewModel() {
-    private val _viewState = MutableStateFlow<NewsUiStateModel.State>(NewsUiStateModel.State.Init)
+    private val _viewState = MutableStateFlow<HomeUiStateModel.State>(HomeUiStateModel.State.Init)
     val viewState = _viewState.asStateFlow()
 
     init {
@@ -23,14 +24,14 @@ class HomeViewModel @Inject constructor(
             newsUseCase.itemsModel.flowOn(Dispatchers.IO).map {
                 when (it) {
                     NewsUseCaseStateModel.Failure -> {
-                        NewsUiStateModel.State.Failure
+                        HomeUiStateModel.State.Failure
                     }
                     NewsUseCaseStateModel.NotSet -> {
-                        NewsUiStateModel.State.Loading
+                        HomeUiStateModel.State.Loading
                     }
                     is NewsUseCaseStateModel.Success -> {
-                        NewsUiStateModel.State.Success(
-                            model = newsMapperUiModel.mapUseCaseResponseToUi(
+                        HomeUiStateModel.State.Success(
+                            model = homeMapperUi.mapUseCaseResponseToUi(
                                 response = it.model
                             )
                         )
@@ -44,6 +45,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun updateSelectedNews(modelUi: NewsItemUiModel) {
+        viewModelScope.launch {
+            newsUseCase.updateSelectedNews(
+                model = homeMapperUi.mapUiToUseCase(modelUi = modelUi)
+            )
+        }
+    }
 
     fun getNews() {
         viewModelScope.launch {

@@ -4,13 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 
-class SharedViewModel(val navController: NavHostController) : ViewModel() {
+class SharedViewModel(private val navController: NavHostController) : ViewModel() {
     fun updateScreenState(screen: Screens) {
         navController.navigate(screen.route)
     }
 
+    fun goBack() {
+        navController.popBackStack()
+    }
 }
 
+@Suppress("UNCHECKED_CAST")
 class SharedViewModelFactory(
     private val navController: NavHostController,
 ) : ViewModelProvider.Factory {

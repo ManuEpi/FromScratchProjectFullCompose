@@ -6,6 +6,7 @@ import timber.log.Timber
 sealed class Screens(val route: String) {
     object SplashScreen : Screens("splash_screen")
     object Home : Screens("home_screen")
+    object NewsDetail : Screens("news_detail_screen")
 }
 
 sealed class NetworkResponse<T : Any> {

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/datas" />
             <option value="$PROJECT_DIR$/datas-impl" />
             <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/feature-detail" />
             <option value="$PROJECT_DIR$/feature-home" />
             <option value="$PROJECT_DIR$/feature-splashscreen" />
             <option value="$PROJECT_DIR$/navigation" />

@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.manuepi.fromscratchprojectv2.common.Screens
 import com.manuepi.fromscratchprojectv2.common.SharedViewModel
 import com.manuepi.fromscratchprojectv2.common.SharedViewModelFactory
+import com.manuepi.fromscratchprojectv2.feature.detail.DetailScreen
 import com.manuepi.fromscratchprojectv2.feature.home.HomeScreen
 import com.manuepi.fromscratchprojectv2.feature.splashscreen.SplashScreen
 
@@ -45,5 +46,6 @@ fun MainNavigation(
                 })
         }
         composable(Screens.Home.route) { HomeScreen(sharedViewModel = sharedViewModel) }
+        composable(Screens.NewsDetail.route) { DetailScreen(sharedViewModel = sharedViewModel) }
     }
 }
