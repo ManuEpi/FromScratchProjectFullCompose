@@ -22,14 +22,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
-import com.manuepi.fromscratchprojectv2.common.SharedViewModel
+import com.manuepi.fromscratchprojectv2.common.SharedNavigator
 import com.manuepi.fromscratchprojectv2.common.views.HyperlinkInSentence
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun DetailScreen(
     viewModel: DetailViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel
+    sharedNavigator: SharedNavigator
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
@@ -45,7 +45,7 @@ fun DetailScreen(
             contentDescription = stringResource(id = androidx.compose.ui.R.string.close_drawer),
             Modifier
                 .clickable {
-                    sharedViewModel.goBack()
+                    sharedNavigator.goBack()
                 }
                 .padding(12.dp)
                 .size(22.dp)

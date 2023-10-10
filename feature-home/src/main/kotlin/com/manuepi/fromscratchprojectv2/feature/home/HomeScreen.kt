@@ -24,16 +24,17 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.manuepi.fromscratchprojectv2.common.Screens
-import com.manuepi.fromscratchprojectv2.common.SharedViewModel
+import com.manuepi.fromscratchprojectv2.common.SharedNavigator
 import com.manuepi.fromscratchprojectv2.common.formatText
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.HomeUiStateModel
+import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiModel
 
 @SuppressLint("PrivateResource")
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel
+    sharedNavigator: SharedNavigator
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
 
@@ -44,55 +45,70 @@ fun HomeScreen(
 
     when (val result = state.value) {
         HomeUiStateModel.State.Failure -> {
+            FailureState()
+        }
+        HomeUiStateModel.State.Init -> {
+            // NO-OP
+        }
+        HomeUiStateModel.State.Loading -> {
+            LoadingState()
+        }
+        is HomeUiStateModel.State.Success -> {
+            SuccessState(
+                model = result.model,
+                viewModel = viewModel,
+                sharedNavigator = sharedNavigator
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingState() {
+    Text(
+        text = "Chargement des articles en cours", modifier = Modifier
+            .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
+    )
+}
+
+@Composable
+fun FailureState() {
+    Text(
+        text = "Echec du chargement des articles. Le nombre maximal d'appel à l'API à été atteint.",
+        modifier = Modifier
+            .padding(12.dp),
+        fontSize = 20.sp,
+        fontFamily = FontFamily.SansSerif
+    )
+}
+
+@Composable
+fun SuccessState(model: NewsUiModel, viewModel: HomeViewModel, sharedNavigator: SharedNavigator) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(12.dp)
+    ) {
+        if (model.totalResults == null || model.totalResults == 0) {
             Text(
-                text = "Echec du chargement des articles. Le nombre maximal d'appel à l'API à été atteint.",
+                text = "Malheureusement aucun article n'a été trouvé, veuillez réessayer plus tard",
                 modifier = Modifier
                     .padding(12.dp),
                 fontSize = 20.sp,
                 fontFamily = FontFamily.SansSerif
             )
-        }
-        HomeUiStateModel.State.Init -> {
-            // NO-OP
+        } else {
             Text(
-                text = "INIT", modifier = Modifier
+                text = formatText(model.totalResults), modifier = Modifier
                     .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
             )
-        }
-        HomeUiStateModel.State.Loading -> {
-            Text(
-                text = "Chargement des articles en cours", modifier = Modifier
-                    .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
-            )
-        }
-        is HomeUiStateModel.State.Success -> {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp)
-            ) {
-                if (result.model.totalResults == null || result.model.totalResults == 0) {
-                    Text(
-                        text = "Malheureusement aucun article n'a été trouvé, veuillez réessayer plus tard",
-                        modifier = Modifier
-                            .padding(12.dp),
-                        fontSize = 20.sp,
-                        fontFamily = FontFamily.SansSerif
-                    )
-                } else {
-                    Text(
-                        text = formatText(result.model.totalResults), modifier = Modifier
-                            .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
-                    )
 
-                    LazyColumn {
-                        items(result.model.articles) { modelUi ->
-                            HomeItems(modelUi = modelUi, onItemClicked = {
-                                viewModel.updateSelectedNews(modelUi = modelUi)
-                                sharedViewModel.updateScreenState(screen = Screens.NewsDetail)
-                            })
-                        }
-                    }
+            LazyColumn {
+                items(model.articles) { modelUi ->
+                    HomeItems(modelUi = modelUi, onItemClicked = {
+                        viewModel.updateSelectedNews(modelUi = modelUi)
+                        sharedNavigator.updateScreenState(screen = Screens.NewsDetail)
+                    })
                 }
             }
         }

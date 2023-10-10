@@ -4,13 +4,11 @@ import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.manuepi.fromscratchprojectv2.common.Screens
-import com.manuepi.fromscratchprojectv2.common.SharedViewModel
-import com.manuepi.fromscratchprojectv2.common.SharedViewModelFactory
+import com.manuepi.fromscratchprojectv2.common.SharedNavigator
 import com.manuepi.fromscratchprojectv2.feature.detail.DetailScreen
 import com.manuepi.fromscratchprojectv2.feature.home.HomeScreen
 import com.manuepi.fromscratchprojectv2.feature.splashscreen.SplashScreen
@@ -23,9 +21,7 @@ fun MainNavigation(
 ) {
     val context = LocalContext.current
     val navController = rememberNavController()
-    val sharedViewModel = viewModel<SharedViewModel>(
-        factory = SharedViewModelFactory(navController = navController)
-    )
+    val sharedNavigator = SharedNavigator(navController = navController)
 
     NavHost(
         navController = navController, startDestination = startDestination
@@ -45,7 +41,7 @@ fun MainNavigation(
                     ).show()
                 })
         }
-        composable(Screens.Home.route) { HomeScreen(sharedViewModel = sharedViewModel) }
-        composable(Screens.NewsDetail.route) { DetailScreen(sharedViewModel = sharedViewModel) }
+        composable(Screens.Home.route) { HomeScreen(sharedNavigator = sharedNavigator) }
+        composable(Screens.NewsDetail.route) { DetailScreen(sharedNavigator = sharedNavigator) }
     }
 }
