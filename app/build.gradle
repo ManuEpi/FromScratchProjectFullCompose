@@ -25,6 +25,7 @@ android {
         versionCode 1
         versionName "1.0"
         compileSdkPreview = "UpsideDownCake"
+        buildConfigField "String", "API_KEY", "\"$API_KEY\""
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

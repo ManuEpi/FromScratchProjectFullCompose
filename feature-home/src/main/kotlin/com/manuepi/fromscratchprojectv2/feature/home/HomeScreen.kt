@@ -27,7 +27,6 @@ import com.manuepi.fromscratchprojectv2.common.Screens
 import com.manuepi.fromscratchprojectv2.common.SharedViewModel
 import com.manuepi.fromscratchprojectv2.common.formatText
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
-import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.HomeUiStateModel
 
 @SuppressLint("PrivateResource")
@@ -37,31 +36,64 @@ fun HomeScreen(
     sharedViewModel: SharedViewModel
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
-    val model: NewsUiModel? = (state.value as? HomeUiStateModel.State.Success)?.model
 
     // API call
     LaunchedEffect(key1 = Unit) {
         viewModel.getNews()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(12.dp)
-    ) {
-        model?.totalResults?.let {
+    when (val result = state.value) {
+        HomeUiStateModel.State.Failure -> {
             Text(
-                text = formatText(model.totalResults), modifier = Modifier
+                text = "Echec du chargement des articles. Le nombre maximal d'appel à l'API à été atteint.",
+                modifier = Modifier
+                    .padding(12.dp),
+                fontSize = 20.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+        }
+        HomeUiStateModel.State.Init -> {
+            // NO-OP
+            Text(
+                text = "INIT", modifier = Modifier
                     .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
             )
         }
+        HomeUiStateModel.State.Loading -> {
+            Text(
+                text = "Chargement des articles en cours", modifier = Modifier
+                    .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
+            )
+        }
+        is HomeUiStateModel.State.Success -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp)
+            ) {
+                if (result.model.totalResults == null || result.model.totalResults == 0) {
+                    Text(
+                        text = "Malheureusement aucun article n'a été trouvé, veuillez réessayer plus tard",
+                        modifier = Modifier
+                            .padding(12.dp),
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                } else {
+                    Text(
+                        text = formatText(result.model.totalResults), modifier = Modifier
+                            .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
+                    )
 
-        LazyColumn {
-            items(model?.articles.orEmpty()) { modelUi ->
-                HomeItems(modelUi = modelUi, onItemClicked = {
-                    viewModel.updateSelectedNews(modelUi = modelUi)
-                    sharedViewModel.updateScreenState(screen = Screens.NewsDetail)
-                })
+                    LazyColumn {
+                        items(result.model.articles) { modelUi ->
+                            HomeItems(modelUi = modelUi, onItemClicked = {
+                                viewModel.updateSelectedNews(modelUi = modelUi)
+                                sharedViewModel.updateScreenState(screen = Screens.NewsDetail)
+                            })
+                        }
+                    }
+                }
             }
         }
     }

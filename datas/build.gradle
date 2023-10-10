@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdk 27
         targetSdk 33
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", "\"$API_KEY\""
     }
 
     compileOptions {
@@ -31,6 +31,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
