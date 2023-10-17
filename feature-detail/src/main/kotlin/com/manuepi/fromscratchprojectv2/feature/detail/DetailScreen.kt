@@ -24,12 +24,11 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.manuepi.fromscratchprojectv2.common.SharedNavigator
 import com.manuepi.fromscratchprojectv2.common.views.HyperlinkInSentence
+import com.manuepi.fromscratchprojectv2.feature.detail.model.NewItemUiModel
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun DetailScreen(
-    viewModel: DetailViewModel = hiltViewModel(),
-    sharedNavigator: SharedNavigator
+    viewModel: DetailViewModel = hiltViewModel(), sharedNavigator: SharedNavigator
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
@@ -40,75 +39,78 @@ fun DetailScreen(
             .verticalScroll(state = scrollState)
             .background(color = Color.LightGray)
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.arrow_back),
+        Image(painter = painterResource(id = R.drawable.arrow_back),
             contentDescription = stringResource(id = androidx.compose.ui.R.string.close_drawer),
             Modifier
                 .clickable {
                     sharedNavigator.goBack()
                 }
                 .padding(12.dp)
-                .size(22.dp)
-        )
+                .size(22.dp))
 
         state.value?.let { modelUi ->
+            DisplayContent(modelUi = modelUi)
+        }
+
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun DisplayContent(modelUi: NewItemUiModel) {
+    Text(
+        text = modelUi.title.orEmpty(),
+        modifier = Modifier.padding(14.dp),
+        fontSize = 22.sp,
+        fontFamily = FontFamily.SansSerif,
+        fontStyle = FontStyle.Normal,
+        fontWeight = FontWeight.Bold
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
+            .padding(horizontal = 12.dp)
+            .fillMaxWidth(),
+    ) {
+        GlideImage(
+            model = modelUi.urlToImage,
+            contentScale = ContentScale.Crop,
+            contentDescription = modelUi.urlToImage,
+            failure = placeholder(androidx.core.R.drawable.ic_call_answer),
+            modifier = Modifier.size(60.dp)
+        )
+
+        Column(Modifier.padding(12.dp)) {
             Text(
-                text = state.value?.title.orEmpty(),
-                modifier = Modifier
-                    .padding(14.dp),
-                fontSize = 22.sp,
-                fontFamily = FontFamily.SansSerif,
-                fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Bold
+                text = if (modelUi.author.isNullOrEmpty()) "" else "Auteur : " + modelUi.author,
+                maxLines = 2,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
             )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
-                    .padding(horizontal = 12.dp)
-                    .fillMaxWidth(),
-            ) {
-                GlideImage(
-                    model = modelUi.urlToImage,
-                    contentScale = ContentScale.Crop,
-                    contentDescription = modelUi.urlToImage,
-                    failure = placeholder(androidx.core.R.drawable.ic_call_answer),
-                    modifier = Modifier.size(60.dp)
-                )
-
-                Column(Modifier.padding(12.dp)) {
-                    Text(
-                        text = if (modelUi.author.isNullOrEmpty()) "" else "Auteur : " + modelUi.author,
-                        maxLines = 2,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = if (modelUi.publishedAt.isNullOrEmpty()) "" else "Date : " + modelUi.publishedAt,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-
             Text(
-                text = modelUi.content.orEmpty(),
-                modifier = Modifier
-                    .padding(14.dp),
+                text = if (modelUi.publishedAt.isNullOrEmpty()) "" else "Date : " + modelUi.publishedAt,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
                 fontSize = 16.sp,
-                fontFamily = FontFamily.SansSerif,
-                fontStyle = FontStyle.Normal
-            )
-
-            HyperlinkInSentence(
-                modifier = Modifier.padding(12.dp),
-                sourceText = "Lien vers ",
-                hyperlinkText = "l'article en question",
-                uri = modelUi.url.orEmpty()
+                fontWeight = FontWeight.Medium
             )
         }
     }
+
+    Text(
+        text = modelUi.content.orEmpty(),
+        modifier = Modifier.padding(14.dp),
+        fontSize = 16.sp,
+        fontFamily = FontFamily.SansSerif,
+        fontStyle = FontStyle.Normal
+    )
+
+    HyperlinkInSentence(
+        modifier = Modifier.padding(12.dp),
+        sourceText = "Lien vers ",
+        hyperlinkText = "l'article en question",
+        uri = modelUi.url.orEmpty()
+    )
 }
