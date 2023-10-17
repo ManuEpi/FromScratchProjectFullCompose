@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
                         HomeUiStateModel.State.Failure
                     }
                     NewsUseCaseStateModel.NotSet -> {
-                        HomeUiStateModel.State.Loading
+                        HomeUiStateModel.State.Init
                     }
                     is NewsUseCaseStateModel.Success -> {
                         HomeUiStateModel.State.Success(
@@ -53,9 +53,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getNews() {
+    fun getNews(word: String) {
         viewModelScope.launch {
-            newsUseCase.getNews()
+            newsUseCase.getNews(word = word)
         }
     }
 }

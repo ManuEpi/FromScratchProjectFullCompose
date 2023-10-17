@@ -7,14 +7,21 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,36 +33,61 @@ import com.bumptech.glide.integration.compose.placeholder
 import com.manuepi.fromscratchprojectv2.common.Screens
 import com.manuepi.fromscratchprojectv2.common.SharedNavigator
 import com.manuepi.fromscratchprojectv2.common.formatText
+import com.manuepi.fromscratchprojectv2.common.views.BoldInSentence
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsItemUiModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.HomeUiStateModel
 import com.manuepi.fromscratchprojectv2.feature.home.model.NewsUiModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("PrivateResource")
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     sharedNavigator: SharedNavigator
 ) {
-    val state = viewModel.viewState.collectAsStateWithLifecycle()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    val state = viewModel.viewState.collectAsStateWithLifecycle().value
+
+    var inputWord by remember { mutableStateOf("") }
+    var finalWord by remember { mutableStateOf("") }
 
     // API call
-    LaunchedEffect(key1 = Unit) {
+    // Deprecated, now we make API call only if user type and validate something on input text
+    // It will get result depending on what user typed
+    /*LaunchedEffect(key1 = state) {
         viewModel.getNews()
-    }
+    }*/
 
-    when (val result = state.value) {
-        HomeUiStateModel.State.Failure -> {
-            FailureState()
-        }
-        HomeUiStateModel.State.Init -> {
-            // NO-OP
-        }
-        HomeUiStateModel.State.Loading -> {
-            LoadingState()
-        }
-        is HomeUiStateModel.State.Success -> {
-            SuccessState(
-                model = result.model,
+    Column(
+        Modifier
+            .background(Color.LightGray)
+            .fillMaxSize()
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.padding(12.dp),
+            value = inputWord,
+            onValueChange = { inputWord = it },
+            label = { Text("Veuillez renseigner un mot-clé") },
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onDone =
+            {
+                keyboardController?.hide()
+                viewModel.getNews(word = inputWord)
+                finalWord = inputWord
+            }),
+        )
+
+        when (state) {
+            HomeUiStateModel.State.Failure -> FailureState()
+            HomeUiStateModel.State.Init -> InitState()
+            is HomeUiStateModel.State.Success -> SuccessState(
+                word = finalWord,
+                model = state.model,
                 viewModel = viewModel,
                 sharedNavigator = sharedNavigator
             )
@@ -64,9 +96,9 @@ fun HomeScreen(
 }
 
 @Composable
-fun LoadingState() {
+fun InitState() {
     Text(
-        text = "Chargement des articles en cours", modifier = Modifier
+        text = "Faites une recherche cela vous affichera une liste d'articles", modifier = Modifier
             .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
     )
 }
@@ -83,24 +115,29 @@ fun FailureState() {
 }
 
 @Composable
-fun SuccessState(model: NewsUiModel, viewModel: HomeViewModel, sharedNavigator: SharedNavigator) {
+fun SuccessState(
+    word: String,
+    model: NewsUiModel,
+    viewModel: HomeViewModel,
+    sharedNavigator: SharedNavigator
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
     ) {
         if (model.totalResults == null || model.totalResults == 0) {
-            Text(
-                text = "Malheureusement aucun article n'a été trouvé, veuillez réessayer plus tard",
-                modifier = Modifier
-                    .padding(12.dp),
-                fontSize = 20.sp,
-                fontFamily = FontFamily.SansSerif
+            BoldInSentence(
+                modifier = Modifier.padding(12.dp),
+                sourceText = "Malheureusement aucun article n'a été trouvé pour ce mot ",
+                endText = ", veuillez réessayer plus tard",
+                boldText = word
             )
         } else {
-            Text(
-                text = formatText(model.totalResults), modifier = Modifier
-                    .padding(12.dp), fontSize = 20.sp, fontFamily = FontFamily.SansSerif
+            BoldInSentence(
+                modifier = Modifier.padding(12.dp),
+                sourceText = formatText(numberOfNews = model.totalResults),
+                boldText = word
             )
 
             LazyColumn {
@@ -118,7 +155,6 @@ fun SuccessState(model: NewsUiModel, viewModel: HomeViewModel, sharedNavigator: 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun HomeItems(modelUi: NewsItemUiModel, onItemClicked: () -> Unit) {
-    Spacer(modifier = Modifier.padding(8.dp))
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier

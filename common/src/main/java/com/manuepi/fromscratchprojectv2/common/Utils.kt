@@ -30,7 +30,7 @@ suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>): NetworkRespo
 fun formatText(numberOfNews: Int): String {
 
     return if (numberOfNews <= 0)
-        "Nous n'avons pas trouvé de résultat pour le mot bitcoin"
+        "Nous n'avons pas trouvé de résultat pour le mot "
     else
-        "Nous vous avons trouvé $numberOfNews résultats pour le mot bitcoin"
+        "Nous vous avons trouvé $numberOfNews résultats pour le mot "
 }

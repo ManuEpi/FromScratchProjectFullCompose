@@ -41,12 +41,12 @@ class NewsUseCaseImpl @Inject constructor(
         }.distinctUntilChanged().flowOn(Dispatchers.IO)
     }
 
-    override suspend fun getNews() {
+    override suspend fun getNews(word: String) {
         withContext(Dispatchers.IO)
         {
             val language = Locale.getDefault().language
             // We get response from repository
-            val news = newsRepository.getNews(language = language)
+            val news = newsRepository.getNews(language = language, word = word)
 
             // And then we update our local data, that will be listened by [itemsModel]
             newsLocalCache.onItemsLoaded(newsMapperRepositoryModel.mapNewsRepoToLocalCache(repositoryModel = news))

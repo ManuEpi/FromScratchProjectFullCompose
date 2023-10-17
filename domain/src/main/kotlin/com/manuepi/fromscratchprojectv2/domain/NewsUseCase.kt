@@ -9,6 +9,6 @@ interface NewsUseCase {
     val selectedNews: Flow<NewsItemUseCaseModel?>
     val itemsModel: Flow<NewsUseCaseStateModel>
 
-    suspend fun getNews()
+    suspend fun getNews(word: String)
     suspend fun updateSelectedNews(model: NewsItemUseCaseModel)
 }

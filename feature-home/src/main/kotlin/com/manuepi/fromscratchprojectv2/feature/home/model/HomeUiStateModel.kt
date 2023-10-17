@@ -5,7 +5,6 @@ data class HomeUiStateModel(
 ) {
     sealed class State {
         object Init : State()
-        object Loading : State()
         data class Success(
             val model: NewsUiModel
         ) : State()

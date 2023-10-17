@@ -5,5 +5,5 @@ import com.manuepi.fromscratchprojectv2.datas.api.models.NewsApiResponseModel
 
 interface NewsApi {
     // get news from Service
-    suspend fun getNews(language: String): NetworkResponse<NewsApiResponseModel>
+    suspend fun getNews(language: String, word: String): NetworkResponse<NewsApiResponseModel>
 }

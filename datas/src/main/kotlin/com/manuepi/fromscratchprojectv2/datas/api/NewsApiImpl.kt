@@ -10,9 +10,9 @@ import javax.inject.Inject
 class NewsApiImpl @Inject constructor(
     private val newsNetwork: NewsNetwork
 ) : NewsApi {
-    override suspend fun getNews(language: String): NetworkResponse<NewsApiResponseModel> =
+    override suspend fun getNews(language: String, word: String): NetworkResponse<NewsApiResponseModel> =
         // Handle service response for getNews call
         safeApiCall {
-            newsNetwork.getNews(apiKey = BuildConfig.API_KEY, q = "bitcoin", language = language)
+            newsNetwork.getNews(apiKey = BuildConfig.API_KEY, q = word, language = language)
         }
 }
