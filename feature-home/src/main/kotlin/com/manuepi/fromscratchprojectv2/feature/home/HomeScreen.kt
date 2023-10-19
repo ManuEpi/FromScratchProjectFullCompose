@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -59,38 +60,40 @@ fun HomeScreen(
         viewModel.getNews()
     }*/
 
-    Column(
-        Modifier
-            .background(Color.LightGray)
-            .fillMaxSize()
-    ) {
-        OutlinedTextField(
-            modifier = Modifier.padding(12.dp),
-            value = inputWord,
-            onValueChange = { inputWord = it },
-            label = { Text("Veuillez renseigner un mot-clé") },
-            maxLines = 1,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(onDone =
-            {
-                keyboardController?.hide()
-                viewModel.getNews(word = inputWord)
-                finalWord = inputWord
-            }),
-        )
-
-        when (state) {
-            HomeUiStateModel.State.Failure -> FailureState()
-            HomeUiStateModel.State.Init -> InitState()
-            is HomeUiStateModel.State.Success -> SuccessState(
-                word = finalWord,
-                model = state.model,
-                viewModel = viewModel,
-                sharedNavigator = sharedNavigator
+    Surface {
+        Column(
+            Modifier
+                .background(Color.LightGray)
+                .fillMaxSize()
+        ) {
+            OutlinedTextField(
+                modifier = Modifier.padding(12.dp),
+                value = inputWord,
+                onValueChange = { inputWord = it },
+                label = { Text("Veuillez renseigner un mot-clé") },
+                maxLines = 1,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone =
+                {
+                    keyboardController?.hide()
+                    viewModel.getNews(word = inputWord)
+                    finalWord = inputWord
+                }),
             )
+
+            when (state) {
+                HomeUiStateModel.State.Failure -> FailureState()
+                HomeUiStateModel.State.Init -> InitState()
+                is HomeUiStateModel.State.Success -> SuccessState(
+                    word = finalWord,
+                    model = state.model,
+                    viewModel = viewModel,
+                    sharedNavigator = sharedNavigator
+                )
+            }
         }
     }
 }
